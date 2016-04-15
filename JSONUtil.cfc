@@ -357,15 +357,18 @@ limitations under the License.
 
 		<!--- NUMBER --->
 		<cfelseif IsNumeric(_data)>
-			<cfif getClassName(_data) eq "java.lang.String">
+			<!--- added to resolve issue with zip code values --->
+			<cfif getClassName(_data) eq "java.lang.String" AND NOT isValid("zipcode",_data)>
 				<cfreturn Val(_data).toString() />
 			<cfelse>
-				<cfreturn _data.toString() />
+				<cfreturn '"#_data.toString()#"' />
 			</cfif>
 
 		<!--- DATE --->
 		<cfelseif IsDate(_data)>
-			<cfreturn '"#DateFormat(_data, "mmmm, dd yyyy")# #TimeFormat(_data, "HH:mm:ss")#"' />
+			<!--- <cfreturn '"#DateFormat(_data, "mmmm, dd yyyy")# #TimeFormat(_data, "HH:mm:ss")#"' /> --->
+			<!--- return the original instead of this date format --->
+			<cfreturn '"#_data.toString()#"'>
 
 		<!--- STRING --->
 		<cfelseif IsSimpleValue(_data)>
